@@ -420,11 +420,13 @@
           {
             "name": "SalesTerritoryKey",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "SalesTerritoryKey"
           },
           {
             "name": "SalesTerritoryAlternateKey",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "SalesTerritoryAlternateKey"
           },
           {
@@ -465,11 +467,13 @@
           {
             "name": "SalesTerritoryKey",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "SalesTerritoryKey"
           },
           {
             "name": "SalesTerritoryAlternateKey",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "SalesTerritoryAlternateKey"
           },
           {
@@ -497,9 +501,11 @@
               "expression": [
                 "let",
                 "    Source = #\"lookup~Territority~expresstion\",",
-                "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([SalesTerritoryCountry] <> \"NA\" and [SalesTerritoryCountry] <> \"United States\"))",
+                "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([SalesTerritoryCountry] <> \"NA\" and [SalesTerritoryCountry] <> \"United States\")),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"SalesTerritoryKey\", \"SalesTerritoryAlternateKey\", \"SalesTerritoryRegion\", \"SalesTerritoryCountry\", \"SalesTerritoryGroup\"}),",
+                "    #\"Filtered Rows1\" = Table.SelectRows(#\"Removed Other Columns\", each true)",
                 "in",
-                "    #\"Filtered Rows\""
+                "    #\"Filtered Rows1\""
               ]
             }
           }
@@ -511,11 +517,13 @@
           {
             "name": "SalesTerritoryKey",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "SalesTerritoryKey"
           },
           {
             "name": "SalesTerritoryAlternateKey",
             "dataType": "int64",
+            "isHidden": true,
             "sourceColumn": "SalesTerritoryAlternateKey"
           },
           {
@@ -544,6 +552,54 @@
                 "let",
                 "    Source = #\"lookup~Territority~expresstion\",",
                 "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([SalesTerritoryGroup] = \"Europe\"))",
+                "in",
+                "    #\"Filtered Rows\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "lookup~Territority~northAmerica",
+        "columns": [
+          {
+            "name": "SalesTerritoryKey",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "SalesTerritoryKey"
+          },
+          {
+            "name": "SalesTerritoryAlternateKey",
+            "dataType": "int64",
+            "sourceColumn": "SalesTerritoryAlternateKey"
+          },
+          {
+            "name": "SalesTerritoryRegion",
+            "dataType": "string",
+            "sourceColumn": "SalesTerritoryRegion"
+          },
+          {
+            "name": "SalesTerritoryCountry",
+            "dataType": "string",
+            "sourceColumn": "SalesTerritoryCountry"
+          },
+          {
+            "name": "SalesTerritoryGroup",
+            "dataType": "string",
+            "sourceColumn": "SalesTerritoryGroup"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/pc\\prod;AdventureWorksDW2016\",",
+                "    dbo_DimSalesTerritory = Source{[Schema=\"dbo\",Item=\"DimSalesTerritory\"]}[Data],",
+                "    #\"Filtered Rows\" = Table.SelectRows(dbo_DimSalesTerritory, each ([SalesTerritoryGroup] = \"North America\"))",
                 "in",
                 "    #\"Filtered Rows\""
               ]
