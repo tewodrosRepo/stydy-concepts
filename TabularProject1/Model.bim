@@ -366,6 +366,28 @@
               ]
             }
           }
+        ],
+        "measures": [
+          {
+            "name": "OrderCount",
+            "expression": "DISTINCTCOUNT(FactInternetSales[OrderDateKey])",
+            "displayFolder": "DummyTable"
+          },
+          {
+            "name": "DueDateCount",
+            "expression": "DISTINCTCOUNT(FactInternetSales[DueDateKey])",
+            "displayFolder": "DummyTable"
+          },
+          {
+            "name": "CustomerCount",
+            "expression": "DISTINCTCOUNT(FactInternetSales[CustomerKey])",
+            "displayFolder": "DummyTable"
+          },
+          {
+            "name": "TotalOrderQuantity",
+            "expression": "Sum(FactInternetSales[OrderQuantity])",
+            "displayFolder": "DummyTable"
+          }
         ]
       },
       {
@@ -602,6 +624,77 @@
                 "    #\"Filtered Rows\" = Table.SelectRows(dbo_DimSalesTerritory, each ([SalesTerritoryGroup] = \"North America\"))",
                 "in",
                 "    #\"Filtered Rows\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "lookup~North~South~expresstion",
+        "columns": [
+          {
+            "name": "SalesTerritoryKey",
+            "dataType": "int64",
+            "sourceColumn": "SalesTerritoryKey"
+          },
+          {
+            "name": "SalesTerritoryAlternateKey",
+            "dataType": "int64",
+            "sourceColumn": "SalesTerritoryAlternateKey"
+          },
+          {
+            "name": "SalesTerritoryRegion",
+            "dataType": "string",
+            "sourceColumn": "SalesTerritoryRegion"
+          },
+          {
+            "name": "SalesTerritoryCountry",
+            "dataType": "string",
+            "sourceColumn": "SalesTerritoryCountry"
+          },
+          {
+            "name": "SalesTerritoryGroup",
+            "dataType": "string",
+            "sourceColumn": "SalesTerritoryGroup"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"lookup~Territority~expresstion\",",
+                "    #\"Filtered Rows\" = Table.SelectRows(Source, each ([SalesTerritoryRegion] = \"Northeast\" or [SalesTerritoryRegion] = \"Northwest\" or [SalesTerritoryRegion] = \"Southeast\" or [SalesTerritoryRegion] = \"Southwest\"))",
+                "in",
+                "    #\"Filtered Rows\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DummyTable",
+        "columns": [
+          {
+            "name": "DummyTable",
+            "dataType": "string",
+            "sourceColumn": "DummyTable"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = \"\"",
+                "in",
+                "    Source"
               ]
             }
           }
